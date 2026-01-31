@@ -9,12 +9,7 @@ Beginner-friendly e-commerce example with clean MVC structure, session-based car
 
 ### Sample .env database configuration
 ```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=ecommerce
-DB_USERNAME=root
-DB_PASSWORD=
+
 ```
 
 ### Setup
