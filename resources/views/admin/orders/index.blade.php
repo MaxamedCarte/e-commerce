@@ -17,6 +17,15 @@
                         <th class="text-end pe-4">Action</th>
                     </tr>
                 </thead>
+                @php
+                    $statusMeta = [
+                        'pending' => 'bg-warning text-dark',
+                        'processing' => 'bg-info text-dark',
+                        'shipped' => 'bg-primary',
+                        'delivered' => 'bg-success',
+                        'cancelled' => 'bg-danger',
+                    ];
+                @endphp
                 <tbody>
                     @foreach($orders as $order)
                     <tr>
@@ -26,7 +35,11 @@
                             <small class="text-muted">{{ $order->user->email }}</small>
                         </td>
                         <td>${{ number_format($order->total_price, 2) }}</td>
-                        <td><span class="badge bg-warning text-dark">{{ ucfirst($order->status) }}</span></td>
+                        <td>
+                            <span class="badge {{ $statusMeta[$order->status] ?? 'bg-secondary' }}">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </td>
                         <td>{{ $order->created_at->format('M d, Y') }}</td>
                         <td class="text-end pe-4">
                             <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary">View Details</a>

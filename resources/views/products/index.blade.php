@@ -68,17 +68,41 @@
         </div>
     </div>
 
+    <div class="mb-4">
+        <a href="{{ route('products.featured') }}" class="btn btn-link">View All Featured Products</a>
+    </div>
+
     <div class="row g-4">
         @forelse ($products as $product)
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="position-relative">
-                        @if ($product->image)
-                            <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : Storage::url($product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 240px; object-fit: cover;">
+                        @php $isFavorited = in_array($product->id, $favoriteProductIds ?? []); @endphp
+                        @auth
+                            <form method="POST" action="{{ $isFavorited ? route('favorites.destroy', $product) : route('favorites.store', $product) }}" class="position-absolute top-0 start-0 m-2">
+                                @csrf
+                                @if ($isFavorited)
+                                    @method('DELETE')
+                                @endif
+                                <button type="submit" class="btn btn-light btn-sm shadow-sm" aria-label="{{ $isFavorited ? 'Remove from favorites' : 'Add to favorites' }}">
+                                    <i class="bi {{ $isFavorited ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
+                                </button>
+                            </form>
                         @else
-                            <div class="bg-light text-secondary d-flex align-items-center justify-content-center" style="height: 240px;">
-                                <i class="bi bi-camera fs-1"></i>
-                            </div>
+                            <a href="{{ route('register') }}" class="position-absolute top-0 start-0 m-2 btn btn-light btn-sm shadow-sm" aria-label="Register to add favorites">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                        @endauth
+                        @if ($product->image)
+                            <a href="{{ route('products.show', $product) }}" class="d-block">
+                                <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : Storage::url($product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 240px; object-fit: cover;">
+                            </a>
+                        @else
+                            <a href="{{ route('products.show', $product) }}" class="d-block">
+                                <div class="bg-light text-secondary d-flex align-items-center justify-content-center" style="height: 240px;">
+                                    <i class="bi bi-camera fs-1"></i>
+                                </div>
+                            </a>
                         @endif
                         <span class="position-absolute top-0 end-0 badge bg-primary m-2 shadow-sm">${{ number_format($product->price, 0) }}</span>
                     </div>
@@ -86,10 +110,18 @@
                         <div class="mb-2">
                              <span class="badge bg-secondary opacity-75 rounded-pill">{{ $product->category?->name }}</span>
                         </div>
-                        <h5 class="card-title text-truncate" title="{{ $product->name }}">{{ $product->name }}</h5>
+                        <h5 class="card-title text-truncate" title="{{ $product->name }}">
+                            <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark">{{ $product->name }}</a>
+                        </h5>
                         <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 80) }}</p>
                         <div class="d-grid gap-2">
-                            <a href="{{ route('products.show', $product) }}" class="btn btn-outline-primary stretched-link">View Details</a>
+                            <form method="POST" action="{{ route('cart.store', $product) }}">
+                                @csrf
+                                <input type="hidden" name="quantity" value="1">
+                                <button class="btn btn-primary" {{ $product->stock < 1 ? 'disabled' : '' }}>
+                                    <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

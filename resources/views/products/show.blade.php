@@ -21,7 +21,22 @@
                 @endif
             </div>
             <div class="col-md-6">
-                <div class="card-body p-5">
+                <div class="card-body p-5 position-relative">
+                    @auth
+                        <form method="POST" action="{{ $isFavorited ? route('favorites.destroy', $product) : route('favorites.store', $product) }}" class="position-absolute top-0 end-0 me-4 mt-4">
+                            @csrf
+                            @if ($isFavorited)
+                                @method('DELETE')
+                            @endif
+                            <button type="submit" class="btn btn-light btn-sm shadow-sm" aria-label="{{ $isFavorited ? 'Remove from favorites' : 'Add to favorites' }}">
+                                <i class="bi {{ $isFavorited ? 'bi-heart-fill text-danger' : 'bi-heart' }}"></i>
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('register') }}" class="position-absolute top-0 end-0 me-4 mt-4 btn btn-light btn-sm shadow-sm" aria-label="Register to add favorites">
+                            <i class="bi bi-heart"></i>
+                        </a>
+                    @endauth
                     <span class="badge bg-secondary mb-2">{{ $product->category?->name }}</span>
                     <h1 class="display-5 fw-bold mb-3">{{ $product->name }}</h1>
                     <h3 class="text-primary mb-4">${{ number_format($product->price, 2) }}</h3>

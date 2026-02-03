@@ -40,7 +40,7 @@ class OrderController extends Controller
             }
         }
 
-        DB::transaction(function () use ($cart, $request) {
+        $order = DB::transaction(function () use ($cart, $request) {
             $total = 0;
 
             $order = Order::create([
@@ -66,6 +66,8 @@ class OrderController extends Controller
             }
 
             $order->update(['total_price' => $total]);
+
+            return $order;
         });
 
         session()->forget('cart');

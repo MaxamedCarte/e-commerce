@@ -28,6 +28,10 @@
 
                         <button class="btn btn-primary">Login</button>
                     </form>
+                    <div class="mt-3 small text-muted">
+                        Don’t have an account?
+                        <a href="{{ route('register') }}" class="text-decoration-none">Register</a>
+                    </div>
                 </div>
             </div>
         </div>

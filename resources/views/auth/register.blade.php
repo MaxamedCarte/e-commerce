@@ -34,6 +34,10 @@
 
                         <button class="btn btn-primary">Create account</button>
                     </form>
+                    <div class="mt-3 small text-muted">
+                        Already have an account?
+                        <a href="{{ route('login') }}" class="text-decoration-none">Login</a>
+                    </div>
                 </div>
             </div>
         </div>
