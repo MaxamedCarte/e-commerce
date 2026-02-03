@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 
 class FavoriteController extends Controller
+
 {
     public function store(Product $product): RedirectResponse
     {
